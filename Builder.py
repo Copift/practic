@@ -34,11 +34,28 @@ class Builder():
                 print( Warning(f"{tag} not used in document"))
 
     def build(self):
+
+
+
+
         self.getTags()
         self.checkInputData()
         self.replaceTags()
-        self.createTable1_1(self.insertData["table1_1"])
+        self.createTable1(self.insertData["table1"])
+        self.createTable2(self.insertData["table2"])
+
+
+
         self.out.save(self.PathToDeploy + "/Deploy.docx")
+
+
+
+
+
+
+
+
+
     def replaceTags(self):
         for para in self.out.paragraphs:
             text = para.text
@@ -47,7 +64,7 @@ class Builder():
                     if key in text:
                         para.text = para.text.replace(f"{'{'}{key}{'}'}", self.insertData[key])
 
-    def createRowForTable1_1(self,table,t):
+    def createRowForTable1(self, table, t):
         lenRows = len(table.rows)
         for n in range(t):
             table.add_row()
@@ -55,12 +72,12 @@ class Builder():
             for i in range(t):
                 table.cell(row_idx=lenRows + i, col_idx=n).merge(table.cell(row_idx=lenRows + n, col_idx=n))
         return table
-    def createTable1_1(self,table1_1):
+    def createTable1(self, table1):
             table=self.out.tables[0]
             ind=1
-            for RPD in table1_1:
+            for RPD in table1:
                 lenRows = len(table.rows)
-                table=self.createRowForTable1_1(table,len(RPD["indexes"]))
+                table=self.createRowForTable1(table, len(RPD["indexes"]))
                 table.cell(row_idx=lenRows+2,col_idx=0).text=str(ind)
                 table.cell(row_idx=lenRows + 2, col_idx=1).text = str(RPD['codeRPDs'])
                 table.cell(row_idx=lenRows + 2, col_idx=2).text = str(RPD['soder_komp'])
@@ -71,5 +88,15 @@ class Builder():
                     table.cell(row_idx=lenRows + i, col_idx=5).text = str(index["name"])
                     i+=1
                 ind+=1
-
             table.style = 'Table Grid'
+    def createTable2(self,table2):
+        table = self.out.tables[1]
+        table.style = 'Table Grid'
+        for theme in table2:
+            table.add_row()
+            indexRow=len(table.rows)
+            i=0
+
+            for column in theme.keys():
+                table.cell(indexRow-1, i).text = theme[column]
+                i+=1
