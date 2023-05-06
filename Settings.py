@@ -23,17 +23,19 @@ class Settings():
                         i = j-1
                     i += 1
 
+
+
                 #CHECK
+
+
 
                 for path in ini["PATHS"].keys():
                     if not (os.path.exists(ini["PATHS"][path])):
                         raise Exception(f"path {ini['PATHS'][path]} for {path} not found or doesn't exist")
-                    else:
-                        if len(os.listdir(ini['PATHS'][path]))==0:
-                            raise Exception (f"path {ini['PATHS'][path]} for {path} is empty")
 
 
-                need = ['RPDs', 'Plans', 'Text']
+
+                need = ['RPDs', 'Plans', 'Text','Deploy','sh']
                 for name in need:
                     if not (name in ini['PATHS'].keys()):
                         raise Exception(f"{name} path reqired")
@@ -47,7 +49,7 @@ class Settings():
     def __init__(self) -> None:
         self.pathIni = "settings.ini"
         self.ini = self.getIni()
-        print(self.ini)
-        self.Plans = os.listdir(self.ini["PATHS"]["Plans"])
-        self.pathRPDs = os.listdir(self.ini["PATHS"]["RPDs"])
-        self.pathText =os.listdir(self.ini["PATHS"]["Text"])
+        self.Plans = [self.ini["PATHS"]["Plans"]+'/'+file for file in os.listdir(self.ini["PATHS"]["Plans"])]
+        self.RPDs = [self.ini["PATHS"]["RPDs"]+'/'+file for file in os.listdir(self.ini["PATHS"]["RPDs"])]
+        self.Text =[self.ini["PATHS"]["Text"]+'/'+file for file in os.listdir(self.ini["PATHS"]["Text"])]
+        
