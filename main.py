@@ -1,4 +1,6 @@
+from AgregatorRpd import AgregatorRpd
 from Builder import Builder
+from Controller import Controller
 from Settings import Settings
 
 settings = Settings()
@@ -30,7 +32,9 @@ for i in range(8):
                            "krit":"test test test test test test test test test ",
                            "TK": "1)test 2)test 3)test 4)test ",
                            "PA": "1)test 2)test 3)test 4)test ",
-                           })
+                        })
+
+
 for i in range(7):
     krit=[]
     for n in range(7-i):
@@ -43,9 +47,18 @@ for i in range(7):
         "krit":krit,
     })
 
+print(insertData.keys())
+print(insertTable1_1[0].keys())
+print(insertTable1_2[0].keys())
+print(insertTable1_3[0].keys())
 insertData.update({'table3': insertTable1_3})
 insertData.update({'table2': insertTable1_2})
 insertData.update({'table1': insertTable1_1})
+print(insertTable1_1)
 builder = Builder(insertData=insertData, settings=settings)
-
 builder.build()
+agRpd=AgregatorRpd(settings)
+# agRpd.readPdf(".///docs/RPDs/test.pdf")
+controller = Controller(settings)
+controller.start()
+

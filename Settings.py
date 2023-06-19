@@ -44,12 +44,20 @@ class Settings():
         else:
             raise Exception("settings.ini not found")
 
+    def getRPDs(self):
+        result=[]
 
+        for file in os.listdir(self.ini["PATHS"]["RPDs"]):
+            print(file)
+            if "doc" in file or "docx" in file:
+                result.append(file)
+        return result
 
     def __init__(self) -> None:
         self.pathIni = "settings.ini"
         self.ini = self.getIni()
         self.Plans = [self.ini["PATHS"]["Plans"]+'/'+file for file in os.listdir(self.ini["PATHS"]["Plans"])]
-        self.RPDs = [self.ini["PATHS"]["RPDs"]+'/'+file for file in os.listdir(self.ini["PATHS"]["RPDs"])]
+        self.RPDs = [self.ini["PATHS"]["RPDs"]+'/'+file for file in self.getRPDs()]
+        self.RPDsNames=self.getRPDs()
         self.Text =[self.ini["PATHS"]["Text"]+'/'+file for file in os.listdir(self.ini["PATHS"]["Text"])]
         

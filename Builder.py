@@ -1,6 +1,9 @@
 
 from Settings import Settings
 from docx import Document
+
+from docx2pdf import convert
+
 class Builder():
 
     def __init__(self, insertData, settings: Settings) -> None:
@@ -21,24 +24,33 @@ class Builder():
                 self.tags.update({text.split('{')[1].split('}')[0]: None})
 
     def checkInputData(self):
-
         for tag in self.tags.keys():
             if not (tag in self.insertData.keys()):
                 raise Exception(f"{tag} not finded")
-        for tag in self.insertData.keys():
-            if not (tag in self.tags.keys()):
-                print(Warning(f"{tag} not used in document"))
+        # for tag in self.insertData.keys():
+        #     if not (tag in self.tags.keys()):
+        #         print(Warning(f"{tag} not used in document"))
 
     def build(self):
 
         self.getTags()
         self.checkInputData()
         self.replaceTags()
-        self.createTable1(self.insertData["table1"])
-        self.createTable2(self.insertData["table2"])
-        self.createTable3(self.insertData["table3"])
+        try:
+            self.createTable1(self.insertData["table1"])
+        except Exception as err:
+            print(err)
+        try:
+            self.createTable2(self.insertData["table2"])
+        except Exception as err:
+            print(err)
+        try:
+            self.createTable3(self.insertData["table3"])
+        except Exception as err:
+            print(err)
 
         self.out.save(self.PathToDeploy + "/Deploy.docx")
+
 
     def replaceTags(self):
         for para in self.out.paragraphs:
@@ -49,6 +61,7 @@ class Builder():
                         para.text = para.text.replace(f"{'{'}{key}{'}'}", self.insertData[key])
 
     def createRowForTable1(self, table, t):
+        t=t+1
         lenRows = len(table.rows)
         for n in range(t):
             table.add_row()
@@ -97,5 +110,5 @@ class Builder():
                     table.cell(len(table.rows) - 1, 0).merge(table.cell(len(table.rows) - 2, 0))
                 table.cell(len(table.rows) - 1, 1).text = str(sred["krit"][i]['body'])
                 table.cell(len(table.rows) - 1, 2).text = str(sred["krit"][i]['mark'])
-
             table.cell(len(table.rows) - 1, 0).text = sred["sred"]
+
